@@ -37,8 +37,8 @@ jobs:
           file: ./PHP/FPM/Dockerfile
           push: true
           tags: |
-            carry0987/php:${{ env.VERSION }}-fpm
-            carry0987/php:${{ env.LATEST_TAG }}
+            ${{ secrets.DOCKER_USERNAME }}/php:${{ env.VERSION }}-fpm
+            ${{ secrets.DOCKER_USERNAME }}/php:${{ env.LATEST_TAG }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
 
       - name: Logout from DockerHub
