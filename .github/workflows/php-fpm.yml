@@ -25,10 +25,9 @@ jobs:
         id: prep_tags
         run: |
           VERSION=$(echo ${{ github.ref }} | sed -e 's,.*/php-fpm-,,')
-          TAGS="${{ secrets.DOCKER_USERNAME }}/php:${VERSION}-fpm"
+          TAGS="${{ secrets.DOCKER_USERNAME }}/php:${VERSION%-latest}-fpm"
           if [[ "$VERSION" == *"-latest" ]]; then
-            # Append the 'latest' tag to the list
-            TAGS="$TAGS,${{ secrets.DOCKER_USERNAME }}/php:latest"
+            TAGS="$TAGS,${{ secrets.DOCKER_USERNAME }}/php:latest-fpm"
           fi
           echo "TAGS=$TAGS" >> $GITHUB_ENV
 
