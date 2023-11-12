@@ -1,4 +1,5 @@
 ARG PHP_VERSION=8.2.12
+
 # Use multi-stage builds to reduce final image size
 # Stage 1: Build stage
 FROM --platform=$BUILDPLATFORM php:${PHP_VERSION}-fpm as builder
