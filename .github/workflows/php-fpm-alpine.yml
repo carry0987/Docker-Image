@@ -31,7 +31,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./PHP/FPM
-          file: ./PHP/FPM/Dockerfile
+          file: ./PHP/FPM-Alpine/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/php:${{ env.VERSION }}-fpm-alpine
