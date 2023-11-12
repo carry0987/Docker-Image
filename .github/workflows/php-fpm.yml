@@ -21,14 +21,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Prepare the Docker tag
-        id: prep
+      - name: Prepare the Docker tags list
+        id: prep_tags
         run: |
           VERSION=$(echo ${{ github.ref }} | sed -e 's,.*/php-fpm-,,')
-          echo "VERSION=${VERSION%*-latest}" >> $GITHUB_ENV
+          TAGS="${{ secrets.DOCKER_USERNAME }}/php:${VERSION}-fpm"
           if [[ "$VERSION" == *"-latest" ]]; then
-            echo "LATEST_TAG=latest" >> $GITHUB_ENV
+            # Append the 'latest' tag to the list
+            TAGS="$TAGS,${{ secrets.DOCKER_USERNAME }}/php:latest"
           fi
+          echo "TAGS=$TAGS" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -36,9 +38,7 @@ jobs:
           context: ./PHP/FPM
           file: ./PHP/FPM/Dockerfile
           push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/php:${{ env.VERSION }}-fpm
-            ${{ secrets.DOCKER_USERNAME }}/php:${{ env.LATEST_TAG }}
+          tags: ${{ env.TAGS }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
 
       - name: Logout from DockerHub
