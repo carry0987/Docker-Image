@@ -3,7 +3,7 @@ name: Docker Build and Push
 on:
   push:
     tags:
-      - 'PHP/**'
+      - 'php-fpm-*'
 
 jobs:
   build_and_push:
@@ -21,14 +21,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ secrets.DOCKER_USERNAME }}/php
-          tags: |
-            type=raw,value=fpm-${{ github.ref_name }}
-            type=semver,pattern=fpm-{{version}}
+      - name: Extract part of the tag for the Docker tag
+        id: prep
+        run: echo "##[set-output name=tag;]$(echo ${{ github.ref }} | sed -e 's,.*/php-fpm-,,')-fpm"
 
       - name: Build and push Docker image for PHP-FPM
         uses: docker/build-push-action@v5
@@ -36,8 +31,7 @@ jobs:
           context: ./PHP/FPM
           file: ./PHP/FPM/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.prep.outputs.tag }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
 
       - name: Logout from DockerHub
