@@ -2,8 +2,8 @@ name: Docker Build and Push
 
 on:
   push:
-    # Publish semver tags as releases.
-    tags: [ '*.*.*' ]
+    tags:
+      - 'PHP/**'
 
 jobs:
   build_and_push:
@@ -25,16 +25,16 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: carry0987/php
+          images: carry0987/php-fpm
           tags: |
-            type=raw,value=${{ github.ref_name }}
-            type=semver,pattern={{version}}
+            type=raw,value=fpm-${{ github.ref_name }}
+            type=semver,pattern=fpm-{{version}}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image for PHP-FPM
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./PHP/FPM
+          file: ./PHP/FPM/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
