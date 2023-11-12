@@ -1,4 +1,4 @@
-name: Docker Build and Push
+name: PHP-FPM Docker Build and Push
 
 on:
   push:
@@ -22,15 +22,23 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Prepare the Docker tag
-        run: echo "TAG=$(echo ${{ github.ref }} | sed -e 's,.*/php-fpm-,,')-fpm" >> $GITHUB_ENV
+        id: prep
+        run: |
+          VERSION=$(echo ${{ github.ref }} | sed -e 's,.*/php-fpm-,,')
+          echo "VERSION=${VERSION%*-latest}" >> $GITHUB_ENV
+          if [[ "$VERSION" == *"-latest" ]]; then
+            echo "LATEST_TAG=latest" >> $GITHUB_ENV
+          fi
 
-      - name: Build and push Docker image for PHP-FPM
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./PHP/FPM
           file: ./PHP/FPM/Dockerfile
           push: true
-          tags: carry0987/php:${{ env.TAG }}
+          tags: |
+            carry0987/php:${{ env.VERSION }}-fpm
+            ${{ env.LATEST_TAG }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
 
       - name: Logout from DockerHub
