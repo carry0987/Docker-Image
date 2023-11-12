@@ -27,7 +27,7 @@ jobs:
           VERSION=$(echo ${{ github.ref }} | sed -e 's,.*/php-fpm-,,')
           TAGS="${{ secrets.DOCKER_USERNAME }}/php:${VERSION%-latest}-fpm"
           if [[ "$VERSION" == *"-latest" ]]; then
-            TAGS="$TAGS,${{ secrets.DOCKER_USERNAME }}/php:latest-fpm"
+            TAGS="$TAGS,${{ secrets.DOCKER_USERNAME }}/php:latest"
           fi
           echo "TAGS=$TAGS" >> $GITHUB_ENV
 
