@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo \
     && docker-php-ext-enable vips imagick redis opcache \
     # Clean up to reduce layer size
+    && pecl clear-cache \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

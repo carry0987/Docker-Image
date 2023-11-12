@@ -26,6 +26,7 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
     && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo \
     && docker-php-ext-enable vips imagick redis opcache \
     # Clean up to reduce layer size
+    && pecl clear-cache \
     && apk del --no-cache .build-deps \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
@@ -47,6 +48,7 @@ RUN apk update && apk add --no-cache \
         libjpeg-turbo \
         freetype \
         libzip \
+    && rm -rf /tmp/* /var/tmp/* \
     && rm -rf /var/cache/apk/*
 
 # Install Composer in the final stage to avoid carrying over build dependencies
