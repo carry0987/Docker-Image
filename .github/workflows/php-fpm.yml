@@ -21,21 +21,23 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Prepare the Docker tags list
-        id: prep_tags
+      - name: Prepare the Docker tags list and PHP version
         run: |
-          VERSION=$(echo ${{ github.ref }} | sed -e 's,.*/php-fpm-,,')
-          TAGS="${{ secrets.DOCKER_USERNAME }}/php:${VERSION%-latest}-fpm"
-          if [[ "$VERSION" == *"-latest" ]]; then
+          FULL_VERSION=$(echo ${{ github.ref }} | sed -e 's,.*/php-fpm-,,')
+          VERSION=${FULL_VERSION%-latest}
+          TAGS="${{ secrets.DOCKER_USERNAME }}/php:${VERSION}-fpm"
+          if [[ "$FULL_VERSION" == *"-latest" ]]; then
             TAGS="$TAGS,${{ secrets.DOCKER_USERNAME }}/php:latest"
           fi
           echo "TAGS=$TAGS" >> $GITHUB_ENV
+          echo "PHP_VERSION=${VERSION%-fpm}" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./PHP/FPM
           file: ./PHP/FPM/Dockerfile
+          build-args: PHP_VERSION=${{ env.PHP_VERSION }}
           push: true
           tags: ${{ env.TAGS }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
