@@ -1,4 +1,4 @@
-ARG PHP_VERSION=8.1.25
+ARG PHP_VERSION
 
 # Stage 1: Build stage
 FROM --platform=$BUILDPLATFORM php:${PHP_VERSION}-fpm-alpine AS builder

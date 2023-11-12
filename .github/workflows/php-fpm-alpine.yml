@@ -24,17 +24,25 @@ jobs:
       - name: Prepare the Docker tag
         id: prep
         run: |
-          VERSION=$(echo ${{ github.ref }} | sed -e 's,.*/php-fpm-alpine-,,')
-          echo "VERSION=${VERSION%*-latest}" >> $GITHUB_ENV
+          FULL_VERSION=$(echo ${{ github.ref }} | sed -e 's,.*/php-fpm-alpine-,,')
+          VERSION=${FULL_VERSION%-latest}
+          TAGS="${{ secrets.DOCKER_USERNAME }}/php:${VERSION}-fpm-alpine"
+          if [[ "$FULL_VERSION" == *"-latest" ]]; then
+            TAGS="$TAGS,${{ secrets.DOCKER_USERNAME }}/php:latest-alpine"
+          fi
+          echo "TAGS=$TAGS" >> $GITHUB_ENV
+          echo "PHP_VERSION=${VERSION%-fpm-alpine}" >> $GITHUB_ENV
+          echo "PHP_VERSION=${VERSION%-fpm-alpine}"
+          echo "Building with tags: $TAGS"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./PHP/FPM-Alpine
           file: ./PHP/FPM-Alpine/Dockerfile
+          build-args: PHP_VERSION=${{ env.PHP_VERSION }}
           push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/php:${{ env.VERSION }}-fpm-alpine
+          tags: ${{ env.TAGS }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
 
       - name: Logout from DockerHub
