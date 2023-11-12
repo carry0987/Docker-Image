@@ -8,8 +8,10 @@ In addition to basic PHP support, this image provides the following extensions:
 
 3. PHP PDO, Bcmath, Mysqli extensions: These are respectively for database connection, big number computation, and MySQL related operations.
 
-4. Other extensions: Exif, Curl, Mbstring, Zip, Xml, Fileinfo, PCNTL
+4. Other extensions: Exif, Curl, Mbstring, Zip, Xml, Fileinfo, PCNTL, and OPcache.
 
 5. Redis extension: For scenarios that need to use the Redis key-value database.
+
+6. VIPS extension: Provides powerful support for efficient image processing with minimal resource consumption. VIPS is suitable for applications that need to handle large images or perform a significant amount of image read, write, transformation, and processing operations.
 
 In addition, this image includes Composer - a package management tool for PHP, which allows developers to more easily introduce various open-source PHP packages. This Dockerfile installs the necessary system packages and cleans up the apt-get cache to reduce the image size.
