@@ -31,6 +31,8 @@ jobs:
           fi
           echo "TAGS=$TAGS" >> $GITHUB_ENV
           echo "PHP_VERSION=${VERSION%-fpm}" >> $GITHUB_ENV
+          echo "PHP_VERSION=${VERSION%-fpm}"
+          echo "Building with tags: $TAGS"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
