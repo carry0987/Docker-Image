@@ -30,7 +30,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./PHP/FPM
+          context: ./PHP/FPM-Alpine
           file: ./PHP/FPM-Alpine/Dockerfile
           push: true
           tags: |
