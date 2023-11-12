@@ -3,7 +3,7 @@ name: PHP-FPM Docker Build and Push
 on:
   push:
     tags:
-      - 'php-fpm-*'
+      - 'php-fpm-[^alpine]*'
 
 jobs:
   build_and_push:
