@@ -25,7 +25,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: carry0987/php-fpm
+          images: carry0987/php
           tags: |
             type=raw,value=fpm-${{ github.ref_name }}
             type=semver,pattern=fpm-{{version}}
