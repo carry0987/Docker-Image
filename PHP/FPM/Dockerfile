@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Stage 2: Production stage
-FROM --platform=$BUILDPLATFORM php:${PHP_VERSION}-fpm
+FROM --platform=$TARGETPLATFORM php:${PHP_VERSION}-fpm
 
 # Copy installed extensions and their dependencies
 COPY --from=builder /usr/local/etc/php /usr/local/etc/php

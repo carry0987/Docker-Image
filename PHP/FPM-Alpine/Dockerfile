@@ -31,7 +31,7 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 # Stage 2: Production stage
-FROM --platform=$BUILDPLATFORM php:${PHP_VERSION}-fpm-alpine
+FROM --platform=$TARGETPLATFORM php:${PHP_VERSION}-fpm-alpine
 
 # Copy installed extensions and their dependencies
 COPY --from=builder /usr/local/etc/php /usr/local/etc/php
