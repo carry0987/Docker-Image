@@ -30,9 +30,6 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
     && apk del --no-cache .build-deps \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 # Stage 2: Production stage
 FROM --platform=$TARGETPLATFORM php:${PHP_VERSION}-fpm-alpine
 
@@ -54,5 +51,6 @@ RUN apk update && apk add --no-cache \
     && rm -rf /tmp/* /var/tmp/* \
     && rm -rf /var/cache/apk/*
 
-# Add Composer
-COPY --from=builder /usr/local/bin/composer /usr/local/bin/composer
+# Install Composer binary directly
+RUN curl -sS https://getcomposer.org/composer-stable.phar -o /usr/local/bin/composer \
+    && chmod +x /usr/local/bin/composer
