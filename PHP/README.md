@@ -8,7 +8,7 @@ In addition to basic PHP support, this image provides the following extensions:
 
 3. PHP PDO, Bcmath, Mysqli extensions: These are respectively for database connection, big number computation, and MySQL related operations.
 
-4. Other extensions: Exif, Curl, Mbstring, Zip, Xml, Fileinfo, PCNTL, and OPcache.
+4. Other extensions: Exif, Curl, Mbstring, Zip, Xml, Fileinfo, PCNTL, Intl and OPcache.
 
 5. Redis extension: For scenarios that need to use the Redis key-value database.
 

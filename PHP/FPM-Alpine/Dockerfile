@@ -18,12 +18,13 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
         curl-dev \
         openssl-dev \
         libxml2-dev \
+        icu-dev \
     && apk add --no-cache \
         vips \
         imagemagick \
     && printf "\n" | pecl install vips imagick redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo \
+    && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo intl \
     && docker-php-ext-enable vips imagick redis opcache \
     # Clean up to reduce layer size
     && pecl clear-cache \
@@ -31,7 +32,7 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 # Stage 2: Production stage
-FROM --platform=$BUILDPLATFORM php:${PHP_VERSION}-fpm-alpine
+FROM --platform=$TARGETPLATFORM php:${PHP_VERSION}-fpm-alpine
 
 # Copy installed extensions and their dependencies
 COPY --from=builder /usr/local/etc/php /usr/local/etc/php
@@ -48,6 +49,7 @@ RUN apk update && apk add --no-cache \
         libjpeg-turbo \
         freetype \
         libzip \
+        icu-libs \
     && rm -rf /tmp/* /var/tmp/* \
     && rm -rf /var/cache/apk/*
 
