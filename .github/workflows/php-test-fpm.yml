@@ -89,6 +89,7 @@ jobs:
           inputs: ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm
           images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64,${{ env.IMAGE_PREFIX }}-armv7
           push: true
+          amend: true
 
       - name: Logout from DockerHub
         run: docker logout
