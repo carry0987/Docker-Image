@@ -63,6 +63,7 @@ jobs:
           push: true
           tags: ${{ env.TAGS }}
           platforms: ${{ matrix.platform }}
+          provenance: false
 
       - name: Logout from DockerHub
         run: docker logout
