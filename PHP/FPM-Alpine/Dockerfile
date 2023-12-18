@@ -1,7 +1,7 @@
 ARG PHP_VERSION
 
 # Stage 1: Build stage
-FROM --platform=$BUILDPLATFORM php:${PHP_VERSION}-fpm-alpine AS builder
+FROM php:${PHP_VERSION}-fpm-alpine AS builder
 
 # Install dependencies and PHP extensions
 RUN apk update && apk add --no-cache --virtual .build-deps \
