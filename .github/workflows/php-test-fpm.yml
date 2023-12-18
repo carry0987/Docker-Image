@@ -6,7 +6,7 @@ on:
       - 'php-test-fpm-[^alpine]*'
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -15,7 +15,7 @@ jobs:
           - os: ubuntu-latest
             platform: linux/amd64
           - os: buildjet-2vcpu-ubuntu-2204-arm
-            platform: linux/arm64
+            platform: linux/arm64,linux/arm/v7
     outputs:
       version: ${{ steps.prep.outputs.version }}
     steps:
@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up QEMU
-        if: matrix.platform != 'linux/arm64'
+        if: matrix.platform != 'linux/arm64' && matrix.platform != 'linux/arm/v7'
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
@@ -50,7 +50,7 @@ jobs:
           echo "PHP_VERSION=${VERSION%-fpm}"
           echo "Building with tags: $TAGS"
 
-      - name: Build and push Docker image
+      - name: Start multi-arch build and push
         uses: docker/build-push-action@v5
         with:
           context: ./PHP/FPM
@@ -64,23 +64,27 @@ jobs:
         run: docker logout
 
   manifest:
-    needs: build
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Create and push manifest
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
-          VERSION=${{ needs.build.outputs.version }}
-          AMD64_TAG="${{ secrets.DOCKER_USERNAME }}/php:${VERSION}-fpm-linux/amd64"
-          ARM64_TAG="${{ secrets.DOCKER_USERNAME }}/php:${VERSION}-fpm-linux/arm64"
-          FULL_TAG="${{ secrets.DOCKER_USERNAME }}/php:${VERSION}-fpm"
-          LATEST_TAG="${{ secrets.DOCKER_USERNAME }}/php:latest-fpm"
-          docker manifest create $FULL_TAG $AMD64_TAG $ARM64_TAG
-          docker manifest create $LATEST_TAG $AMD64_TAG $ARM64_TAG
-          docker manifest annotate $FULL_TAG $AMD64_TAG --arch amd64
-          docker manifest annotate $FULL_TAG $ARM64_TAG --arch arm64
-          docker manifest annotate $LATEST_TAG $AMD64_TAG --arch amd64
-          docker manifest annotate $LATEST_TAG $ARM64_TAG --arch arm64
-          docker manifest push $FULL_TAG
-          docker manifest push $LATEST_TAG
-          docker logout
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Create and push manifest images
+        uses: Noelware/docker-manifest-action@master
+        with:
+          inputs: ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm
+          images: |
+            ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-amd64
+            ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-arm64
+            ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-armv7
+          push: true
+
+      - name: Logout from DockerHub
+        run: docker logout
