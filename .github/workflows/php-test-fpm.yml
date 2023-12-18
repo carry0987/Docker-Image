@@ -76,14 +76,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
+      - name: Set image prefix
+        run: echo "IMAGE_PREFIX=${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm" >> $GITHUB_ENV
+
       - name: Create and push manifest images
         uses: Noelware/docker-manifest-action@master
         with:
           inputs: ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm
-          images: |
-            ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-amd64
-            ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-arm64
-            ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-armv7
+          images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64,${{ env.IMAGE_PREFIX }}-armv7
           push: true
 
       - name: Logout from DockerHub
