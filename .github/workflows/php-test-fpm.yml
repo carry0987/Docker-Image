@@ -94,5 +94,17 @@ jobs:
           push: true
           amend: true
 
+      - name: Set image prefix for latest
+        run: echo "IMAGE_PREFIX=${{ secrets.DOCKER_USERNAME }}/php:latest" >> $GITHUB_ENV
+
+      - name: Create and push manifest images for latest
+        if: contains(needs.build-and-push.outputs.version, 'latest')
+        uses: Noelware/docker-manifest-action@master
+        with:
+          inputs: ${{ env.IMAGE_PREFIX }}
+          images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64,${{ env.IMAGE_PREFIX }}-armv7
+          push: true
+          amend: true
+
       - name: Logout from DockerHub
         run: docker logout
