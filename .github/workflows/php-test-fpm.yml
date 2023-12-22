@@ -15,7 +15,9 @@ jobs:
           - os: ubuntu-latest
             platform: linux/amd64
           - os: buildjet-4vcpu-ubuntu-2204-arm	
-            platform: linux/arm64,linux/arm/v7
+            platform: linux/arm64
+          - os: buildjet-4vcpu-ubuntu-2204-arm
+            platform: linux/arm/v7
     outputs:
       version: ${{ env.version }}
     steps:
