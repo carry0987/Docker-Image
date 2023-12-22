@@ -20,6 +20,7 @@ jobs:
             platform: linux/arm/v7
     outputs:
       version: ${{ env.version }}
+      latest: ${{ env.IS_LATEST }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -39,6 +40,7 @@ jobs:
           FULL_VERSION=$(echo ${{ github.ref }} | sed -e 's,.*/php-test-fpm-,,')
           VERSION=${FULL_VERSION%-latest}
           TAGS="${{ secrets.DOCKER_USERNAME }}/php:${VERSION}-fpm"
+          IS_LATEST=false
           if [[ ${{ matrix.platform }} == "linux/amd64" ]]; then
             SUFFIX="-amd64"
           elif [[ ${{ matrix.platform }} == "linux/arm64" ]]; then
@@ -49,10 +51,12 @@ jobs:
           TAGS="${{ secrets.DOCKER_USERNAME }}/php:${VERSION}-fpm${SUFFIX}"
           if [[ "$FULL_VERSION" == *"-latest" ]]; then
             TAGS="$TAGS,${{ secrets.DOCKER_USERNAME }}/php:latest${SUFFIX}"
+            IS_LATEST=true
           fi
           echo "TAGS=$TAGS" >> $GITHUB_ENV
           echo "PHP_VERSION=${VERSION%-fpm}" >> $GITHUB_ENV
           echo "version=${VERSION%-fpm}" >> $GITHUB_ENV
+          echo "IS_LATEST=$IS_LATEST" >> $GITHUB_ENV
           echo "PHP_VERSION=${VERSION%-fpm}"
           echo "Building with tags: $TAGS"
 
@@ -94,17 +98,27 @@ jobs:
           push: true
           amend: true
 
+      - name: Check outputs for latest
+        run: echo "Latest ${{ needs.build-and-push.outputs.latest }}"
+
       - name: Set image prefix for latest
+        if: ${{ needs.build-and-push.outputs.latest == 'true' }}
         run: echo "IMAGE_PREFIX=${{ secrets.DOCKER_USERNAME }}/php:latest" >> $GITHUB_ENV
 
       - name: Create and push manifest images for latest
-        if: contains(needs.build-and-push.outputs.version, 'latest')
+        if: ${{ needs.build-and-push.outputs.latest == 'true' }}
         uses: Noelware/docker-manifest-action@master
         with:
           inputs: ${{ env.IMAGE_PREFIX }}
           images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64,${{ env.IMAGE_PREFIX }}-armv7
           push: true
           amend: true
+
+      - name: Remove intermediate images
+        run: |
+          docker rmi ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-amd64 || true
+          docker rmi ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-arm64 || true
+          docker rmi ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-armv7 || true
 
       - name: Logout from DockerHub
         run: docker logout
