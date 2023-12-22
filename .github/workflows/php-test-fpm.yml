@@ -114,11 +114,5 @@ jobs:
           push: true
           amend: true
 
-      - name: Remove intermediate images
-        run: |
-          docker rmi ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-amd64 || true
-          docker rmi ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-arm64 || true
-          docker rmi ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-armv7 || true
-
       - name: Logout from DockerHub
         run: docker logout
