@@ -50,6 +50,7 @@ RUN apk update && apk add --no-cache \
         freetype \
         libzip \
         icu-libs \
+        unzip zip \
     && rm -rf /tmp/* /var/tmp/* \
     && rm -rf /var/cache/apk/*
 

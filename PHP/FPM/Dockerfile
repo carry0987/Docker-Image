@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         imagemagick libmagickwand-6.q16-dev \
         build-essential zlib1g-dev libwebp-dev libpng-dev libjpeg-dev libfreetype6-dev \
         libzip-dev libonig-dev libcurl4-openssl-dev libssl-dev libxml2-dev libicu-dev \
-        unzip zip \
     && printf "\n" | pecl install vips imagick redis \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg --with-webp \
     && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo intl \
@@ -38,6 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libfreetype6 \
         libzip4 \
         libicu-dev \
+        unzip zip \
     && apt-get purge --auto-remove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
