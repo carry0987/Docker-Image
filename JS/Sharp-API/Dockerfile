@@ -6,8 +6,11 @@ WORKDIR /usr/src/app
 COPY source ./
 
 # Install dependencies and build
-RUN npm ci && npm cache clean --force
+RUN npm ci
 RUN npm run build
+
+# Clean up
+RUN npm prune --production && npm cache clean --force
 
 # Production stage
 FROM --platform=$TARGETPLATFORM node:20-alpine
