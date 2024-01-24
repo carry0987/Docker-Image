@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 COPY source ./
 
 # Install dependencies and build
-RUN npm install
+RUN npm ci --only=production && npm cache clean --force
 RUN npm run build
 
 # Production stage
@@ -17,5 +17,4 @@ WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/dist ./dist
 
-EXPOSE 3000
 CMD ["node", "dist/server.js"]
