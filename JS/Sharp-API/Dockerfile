@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 COPY source ./
 
 # Install dependencies and build
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci && npm cache clean --force
 RUN npm run build
 
 # Production stage
