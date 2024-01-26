@@ -1,5 +1,5 @@
 # Stage 1: Build stage
-FROM node:20-alpine AS builder
+FROM node:21-alpine AS builder
 WORKDIR /usr/src/app
 
 # Copy the code from the GitHub Actions "JS/Sharp-API/source" directory
@@ -13,7 +13,7 @@ RUN npm run build
 RUN npm prune --production && npm cache clean --force
 
 # Production stage
-FROM --platform=$TARGETPLATFORM node:20-alpine
+FROM --platform=$TARGETPLATFORM node:21-alpine
 WORKDIR /usr/src/app
 
 # Copy built node modules and compiled code
