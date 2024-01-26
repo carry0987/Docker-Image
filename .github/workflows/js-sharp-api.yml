@@ -16,8 +16,6 @@ jobs:
             platform: linux/amd64
           - os: buildjet-2vcpu-ubuntu-2204-arm	
             platform: linux/arm64
-          - os: buildjet-2vcpu-ubuntu-2204-arm
-            platform: linux/arm/v7
     outputs:
       version: ${{ env.version }}
       latest: ${{ env.IS_LATEST }}
@@ -52,8 +50,6 @@ jobs:
             SUFFIX="-amd64"
           elif [[ ${{ matrix.platform }} == "linux/arm64" ]]; then
             SUFFIX="-arm64"
-          elif [[ ${{ matrix.platform }} == "linux/arm/v7" ]]; then
-            SUFFIX="-armv7"
           fi
           TAGS="${{ secrets.DOCKER_USERNAME }}/sharp-api:${VERSION}${SUFFIX}"
           if [[ "$FULL_VERSION" == *"-latest" ]]; then
@@ -101,7 +97,7 @@ jobs:
         uses: Noelware/docker-manifest-action@master
         with:
           inputs: ${{ secrets.DOCKER_USERNAME }}/sharp-api:${{ needs.build-and-push.outputs.version }}
-          images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64,${{ env.IMAGE_PREFIX }}-armv7
+          images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64
           push: true
           amend: true
 
@@ -117,7 +113,7 @@ jobs:
         uses: Noelware/docker-manifest-action@master
         with:
           inputs: ${{ env.IMAGE_PREFIX }}
-          images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64,${{ env.IMAGE_PREFIX }}-armv7
+          images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64
           push: true
           amend: true
 
