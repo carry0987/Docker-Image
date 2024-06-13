@@ -35,4 +35,4 @@ COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/package.json ./package.json
 
 # Set the entry point
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main"]
