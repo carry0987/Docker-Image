@@ -4,15 +4,24 @@ FROM node:21-alpine AS builder
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Copy the code from the GitHub Actions "JS/Sharp-API/source" directory
-COPY source ./
+# Copy necessary files
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+COPY tsconfig.build.json ./
+COPY tsconfig.json ./
+COPY nest-cli.json ./
+COPY src/ ./src
+COPY test/ ./test
+
+# Install pnpm
+RUN npm install -g pnpm
 
 # Install dependencies and build
-RUN npm ci
-RUN npm run build
+RUN pnpm install
+RUN pnpm build
 
 # Clean up
-RUN npm prune --production && npm cache clean --force
+RUN pnpm prune --prod && pnpm store prune
 
 # Production stage
 FROM --platform=$TARGETPLATFORM node:21-alpine
@@ -26,4 +35,4 @@ COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/package.json ./package.json
 
 # Set the entry point
-CMD ["npm", "run", "start"]
+CMD ["node", "dist/main"]
