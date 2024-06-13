@@ -4,14 +4,8 @@ FROM node:21-alpine AS builder
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Copy necessary files
-COPY package.json ./
-COPY pnpm-lock.yaml ./
-COPY tsconfig.build.json ./
-COPY tsconfig.json ./
-COPY nest-cli.json ./
-COPY src/ ./src
-COPY test/ ./test
+# Copy the code from the GitHub Actions "JS/Sharp-API/source" directory
+COPY source ./
 
 # Install pnpm
 RUN npm install -g pnpm
