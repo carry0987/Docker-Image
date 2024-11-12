@@ -61,7 +61,7 @@ jobs:
           echo "Building with tags: $TAGS"
 
       - name: Start multi-arch build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./PHP/FPM-Alpine
           file: ./PHP/FPM-Alpine/Dockerfile
