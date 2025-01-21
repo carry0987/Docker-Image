@@ -22,6 +22,7 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
     && apk add --no-cache \
         vips \
         imagemagick \
+        patch \
     && printf "\n" | pecl install vips redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo intl \
@@ -31,6 +32,9 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
     && mkdir -p /usr/src/php/ext/imagick \
     && tar -C /usr/src/php/ext/imagick --strip-components=1 -xf /tmp/imagick.tar.gz \
     && rm /tmp/imagick.tar.gz \
+    && curl -L -o /tmp/imagick.patch https://patch-diff.githubusercontent.com/raw/Imagick/imagick/pull/690.patch \
+    && patch -p1 -d /usr/src/php/ext/imagick < /tmp/imagick.patch \
+    && rm /tmp/imagick.patch \
     && docker-php-ext-install imagick \
     && docker-php-ext-enable imagick \
     # Clean up to reduce layer size
