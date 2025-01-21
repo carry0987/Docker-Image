@@ -7,7 +7,6 @@ FROM php:${PHP_VERSION}-fpm-alpine AS builder
 RUN apk update && apk add --no-cache --virtual .build-deps \
         $PHPIZE_DEPS \
         vips-dev \
-        imagemagick-dev \
         zlib-dev \
         libwebp-dev \
         libpng-dev \
@@ -22,10 +21,20 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
     && apk add --no-cache \
         vips \
         imagemagick \
-    && printf "\n" | pecl install vips imagick redis \
+    && printf "\n" | pecl install vips redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo intl \
-    && docker-php-ext-enable vips imagick redis opcache \
+    && docker-php-ext-enable vips redis opcache
+
+# Imagick is installed from the archive
+RUN curl -L -o /tmp/imagick.tar.gz https://github.com/Imagick/imagick/archive/refs/tags/3.7.0.tar.gz \
+    && tar --strip-components=1 -xf /tmp/imagick.tar.gz \
+    && phpize \
+    && ./configure \
+    && make \
+    && make install \
+    && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/ext-imagick.ini \
+    && rm -rf /tmp/* \
     # Clean up to reduce layer size
     && pecl clear-cache \
     && apk del --no-cache .build-deps \
