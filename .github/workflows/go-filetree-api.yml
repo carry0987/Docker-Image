@@ -97,9 +97,9 @@ jobs:
         uses: Noelware/docker-manifest-action@master
         with:
           inputs: ${{ secrets.DOCKER_USERNAME }}/filetree-api:${{ needs.build-and-push.outputs.version }}
-          images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64
+          tags: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64
           push: true
-          amend: true
+          append: true
 
       - name: Check outputs for latest
         run: echo "Latest ${{ needs.build-and-push.outputs.latest }}"
@@ -113,9 +113,9 @@ jobs:
         uses: Noelware/docker-manifest-action@master
         with:
           inputs: ${{ env.IMAGE_PREFIX }}
-          images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64
+          tags: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64
           push: true
-          amend: true
+          append: true
 
       - name: Logout from DockerHub
         run: docker logout

@@ -94,9 +94,9 @@ jobs:
         uses: Noelware/docker-manifest-action@master
         with:
           inputs: ${{ secrets.DOCKER_USERNAME }}/php:${{ needs.build-and-push.outputs.version }}-fpm-alpine
-          images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64,${{ env.IMAGE_PREFIX }}-armv7
+          tags: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64,${{ env.IMAGE_PREFIX }}-armv7
           push: true
-          amend: true
+          append: true
 
       - name: Check outputs for latest
         run: echo "Latest ${{ needs.build-and-push.outputs.latest }}"
@@ -110,9 +110,9 @@ jobs:
         uses: Noelware/docker-manifest-action@master
         with:
           inputs: ${{ env.IMAGE_PREFIX }}
-          images: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64,${{ env.IMAGE_PREFIX }}-armv7
+          tags: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64,${{ env.IMAGE_PREFIX }}-armv7
           push: true
-          amend: true
+          append: true
 
       - name: Logout from DockerHub
         run: docker logout
