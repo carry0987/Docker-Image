@@ -2,7 +2,7 @@ ARG PHP_VERSION
 
 # Use multi-stage builds to reduce final image size
 # Stage 1: Build stage
-FROM php:${PHP_VERSION}-fpm as builder
+FROM php:${PHP_VERSION}-fpm AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libvips-dev libvips-tools \
