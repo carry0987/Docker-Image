@@ -98,6 +98,7 @@ jobs:
       - name: Create and push manifest images
         uses: Noelware/docker-manifest-action@master
         with:
+          fallback: true
           inputs: ghcr.io/${{ github.actor }}/filetree-api:${{ needs.build-and-push.outputs.version }}
           tags: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64
           push: true
@@ -114,6 +115,7 @@ jobs:
         if: ${{ needs.build-and-push.outputs.latest == 'true' }}
         uses: Noelware/docker-manifest-action@master
         with:
+          fallback: true
           inputs: ${{ env.IMAGE_PREFIX }}
           tags: ${{ env.IMAGE_PREFIX }}-amd64,${{ env.IMAGE_PREFIX }}-arm64
           push: true
