@@ -21,10 +21,10 @@ jobs:
       latest: ${{ env.IS_LATEST }}
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check out Sharp-API repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: 'carry0987/FileTree-API'
           token: ${{ secrets.GH_CLONE_TOKEN }}
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
