@@ -23,7 +23,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-      - name: Check out Sharp-API repo
+      - name: Check out FileTree-API repo
         uses: actions/checkout@v4
         with:
           repository: 'carry0987/FileTree-API'
