@@ -1,5 +1,5 @@
 # Build stage
-FROM node:21-alpine AS builder
+FROM node:24-alpine AS builder
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -18,7 +18,7 @@ RUN pnpm build
 RUN pnpm prune --prod && pnpm store prune
 
 # Production stage
-FROM --platform=$TARGETPLATFORM node:21-alpine
+FROM gcr.io/distroless/nodejs24-debian12
 
 # Set the working directory
 WORKDIR /usr/src/app
