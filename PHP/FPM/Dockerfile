@@ -6,7 +6,7 @@ FROM php:${PHP_VERSION}-fpm AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libvips-dev libvips-tools \
-        imagemagick libmagickwand-6.q16-dev \
+        imagemagick libmagickwand-7.q16-dev \
         build-essential zlib1g-dev libwebp-dev libpng-dev libjpeg-dev libfreetype6-dev \
         libzip-dev libonig-dev libcurl4-openssl-dev libssl-dev libxml2-dev libicu-dev \
     && printf "\n" | pecl install vips imagick redis \
@@ -30,7 +30,7 @@ COPY --from=builder /usr/local/sbin /usr/local/sbin
 # Install runtime library dependencies for PHP extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libvips42 \
-        libmagickwand-6.q16-6 \
+        libmagickwand-7.q16-7 \
         libwebp7 \
         libpng16-16 \
         libjpeg62-turbo \
