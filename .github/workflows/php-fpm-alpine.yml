@@ -45,7 +45,7 @@ jobs:
           platform: ${{ matrix.platform }}
           pull: true
           context: ./PHP/FPM-Alpine
-          file: ./PHP/FPM-Alpine/Dockerfile
+          file: ./PHP/FPM-Alpine/Dockerfile.auto
           build-args: PHP_VERSION=${{ steps.version.outputs.major }}.${{ steps.version.outputs.minor }}
           sbom: true
 
