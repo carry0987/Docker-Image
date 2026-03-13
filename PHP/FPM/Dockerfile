@@ -1,4 +1,4 @@
-ARG PHP_VERSION
+ARG PHP_VERSION='8.4.19'
 
 # Use multi-stage builds to reduce final image size
 # Stage 1: Build stage

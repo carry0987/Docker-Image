@@ -1,4 +1,4 @@
-ARG PHP_VERSION
+ARG PHP_VERSION='8.4.19'
 
 # Stage 1: Build stage
 FROM php:${PHP_VERSION}-fpm-alpine AS builder
