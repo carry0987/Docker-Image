@@ -30,12 +30,12 @@ COPY --from=builder /usr/local/sbin /usr/local/sbin
 # Install runtime library dependencies for PHP extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libvips42 \
-        libmagickwand-7.q16-7 \
+        libmagickwand-7.q16-10 \
         libwebp7 \
         libpng16-16 \
         libjpeg62-turbo \
         libfreetype6 \
-        libzip4 \
+        libzip5 \
         libicu-dev \
         unzip zip \
     && apt-get purge --auto-remove -y \
