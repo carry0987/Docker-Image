@@ -25,7 +25,7 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
     && printf "\n" | pecl install vips imagick redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo intl \
-    && docker-php-ext-enable vips imagick redis opcache \
+    && docker-php-ext-enable vips imagick redis \
     # Clean up to reduce layer size
     && pecl clear-cache \
     && apk del --no-cache .build-deps \

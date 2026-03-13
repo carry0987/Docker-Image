@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && printf "\n" | pecl install vips imagick redis \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg --with-webp \
     && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo intl \
-    && docker-php-ext-enable vips imagick redis opcache \
+    && docker-php-ext-enable vips imagick redis \
     # Clean up to reduce layer size
     && pecl clear-cache \
     && apt-get clean \
