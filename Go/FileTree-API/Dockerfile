@@ -14,7 +14,7 @@ RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o filetree cmd/server/main.go
 
 # Production stage
-FROM --platform=$TARGETPLATFORM alpine:latest
+FROM alpine:latest
 
 # Set the working directory
 WORKDIR /root/
