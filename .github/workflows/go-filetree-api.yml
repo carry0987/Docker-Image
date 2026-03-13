@@ -49,7 +49,7 @@ jobs:
           platform: ${{ matrix.platform }}
           context: Go/FileTree-API
           file: Go/FileTree-API/Dockerfile
-          provenance: false
+          sbom: true
 
       - name: Logout from DockerHub
         if: always()
