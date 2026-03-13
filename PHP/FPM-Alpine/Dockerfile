@@ -22,21 +22,10 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
     && apk add --no-cache \
         vips \
         imagemagick \
-        patch \
-    && printf "\n" | pecl install vips redis \
+    && printf "\n" | pecl install vips imagick redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo intl \
-    && docker-php-ext-enable vips redis opcache \
-    # Manual install Imagick
-    && curl -L -o /tmp/imagick.tar.gz https://github.com/Imagick/imagick/archive/refs/tags/3.7.0.tar.gz \
-    && mkdir -p /usr/src/php/ext/imagick \
-    && tar -C /usr/src/php/ext/imagick --strip-components=1 -xf /tmp/imagick.tar.gz \
-    && rm /tmp/imagick.tar.gz \
-    && curl -L -o /tmp/imagick.patch https://patch-diff.githubusercontent.com/raw/Imagick/imagick/pull/690.patch \
-    && patch -p1 -d /usr/src/php/ext/imagick < /tmp/imagick.patch \
-    && rm /tmp/imagick.patch \
-    && docker-php-ext-install imagick \
-    && docker-php-ext-enable imagick \
+    && docker-php-ext-enable vips imagick redis opcache \
     # Clean up to reduce layer size
     && pecl clear-cache \
     && apk del --no-cache .build-deps \
