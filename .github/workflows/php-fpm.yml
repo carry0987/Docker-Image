@@ -43,6 +43,7 @@ jobs:
         with:
           image: ${{ secrets.DOCKER_USERNAME }}/php
           platform: ${{ matrix.platform }}
+          pull: true
           context: ./PHP/FPM
           file: ./PHP/FPM/Dockerfile
           build-args: PHP_VERSION=${{ steps.version.outputs.major }}.${{ steps.version.outputs.minor }}
