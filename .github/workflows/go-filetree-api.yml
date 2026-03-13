@@ -34,7 +34,6 @@ jobs:
         id: version
         with:
           tag: ${{ github.ref_name }}
-          prefix: ''
           extract-pattern: 'go-filetree-api-(.*)'
 
       - name: Login to DockerHub
