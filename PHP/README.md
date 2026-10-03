@@ -6,7 +6,7 @@ In addition to basic PHP support, this image provides the following extensions:
 
 2. GD library: Compiled with --with-freetype, --with-jpeg, and --with-webp to support graphic processing capabilities using Freetype, JPEG, and WebP.
 
-3. PHP PDO, Bcmath, Mysqli extensions: These are respectively for database connection, big number computation, and MySQL related operations.
+3. PHP PDO, Bcmath, Mysqli, Pgsql extensions: These provide database connections, big number computation, MySQL support, and PostgreSQL support, including PDO PostgreSQL.
 
 4. Other extensions: Exif, Curl, Mbstring, Zip, Xml, Fileinfo, PCNTL, Intl and OPcache.
 

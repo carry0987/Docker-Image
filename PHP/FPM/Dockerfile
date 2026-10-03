@@ -1,4 +1,4 @@
-ARG PHP_VERSION='8.4.19'
+ARG PHP_VERSION='8.4.26'
 
 # Use multi-stage builds to reduce final image size
 # Stage 1: Build stage
@@ -8,10 +8,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libvips-dev libvips-tools \
         imagemagick libmagickwand-7.q16-dev \
         build-essential zlib1g-dev libwebp-dev libpng-dev libjpeg-dev libfreetype6-dev \
-        libzip-dev libonig-dev libcurl4-openssl-dev libssl-dev libxml2-dev libicu-dev \
+        libzip-dev libonig-dev libcurl4-openssl-dev libssl-dev libxml2-dev libicu-dev libpq-dev \
     && printf "\n" | pecl install vips imagick redis \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg --with-webp \
-    && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo intl \
+    && docker-php-ext-install pdo_mysql pdo_pgsql pgsql bcmath mysqli exif gd curl mbstring zip xml fileinfo intl \
     && docker-php-ext-enable vips imagick redis \
     # Clean up to reduce layer size
     && pecl clear-cache \
@@ -37,6 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libfreetype6 \
         libzip5 \
         libicu-dev \
+        libpq5 \
         unzip zip \
     && apt-get purge --auto-remove -y \
     && apt-get clean \

@@ -1,4 +1,4 @@
-ARG PHP_VERSION='8.4.19'
+ARG PHP_VERSION='8.4.26'
 
 # Stage 1: Build stage
 FROM php:${PHP_VERSION}-fpm-alpine AS builder
@@ -19,12 +19,13 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
         openssl-dev \
         libxml2-dev \
         icu-dev \
+        postgresql-dev \
     && apk add --no-cache \
         vips \
         imagemagick \
     && printf "\n" | pecl install vips imagick redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install pdo_mysql bcmath mysqli exif gd curl mbstring zip xml fileinfo intl \
+    && docker-php-ext-install pdo_mysql pdo_pgsql pgsql bcmath mysqli exif gd curl mbstring zip xml fileinfo intl \
     && docker-php-ext-enable vips imagick redis \
     # Clean up to reduce layer size
     && pecl clear-cache \
@@ -50,6 +51,7 @@ RUN apk update && apk add --no-cache \
         freetype \
         libzip \
         icu-libs \
+        libpq \
         unzip zip \
     && rm -rf /tmp/* /var/tmp/* \
     && rm -rf /var/cache/apk/*
